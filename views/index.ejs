@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/stylesheets/style.css">
+	</head>
+	<body>
+		<% include header %>
+		
+		<form method="get" action="/create">
+			<!-- contents start -->
+			<div class="container">
+				<h1><p class="text-center">Room List</p></h1>
+				<div id="roomList" class="customBox row col-sm-6 col-sm-offset-3">
+					<% for(i in roomList) { %>
+						<a href="/room/<%= roomList[i].roomURL %>" >
+							<div class="roomInfo" data-roomURL="<%= roomList[i].roomURL %>">
+								<span class="glyphicon glyphicon-expand" aria-hidden="true"></span> <%= roomList[i].roomName %> : <small>HASH(<%= roomList[i].roomURL %>)</small>
+							</div>
+						</a>
+					<% } %>
+				</div>
+				<div class="row ">
+					<div class="col-sm-6 col-sm-offset-3">					
+						<input type="text" class="form-control" placeholder="Room Name" name="roomName">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-8 col-sm-offset-2">
+						<button type="submit" class="btn btn-success btn-lg btn-block ">Create Room</button>
+						<h4><p class="text-left">CREATED ROOM ALIVE DURING JUST ONE HOUR</p></h4>
+
+					</div>
+				</div>
+			</div>
+			<!-- contents end -->
+
+		</form>
+		
+
+
+		<% include footer %>
+	</body>
+
+	<script src="/javascripts/jquery-1.11.2.min.js"></script>
+	<script src="/dist/js/bootstrap.min.js"></script>
+
+</html>

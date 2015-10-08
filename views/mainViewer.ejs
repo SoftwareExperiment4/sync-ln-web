@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/stylesheets/style.css">
+	</head>
+	<body>
+		<% include header %>
+		
+
+		<div class="row">
+			<div class="col-sm-2">
+				<a href="/">
+					<button type="button" class="btn btn-default btn-lg">
+						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					</button>
+				</a>
+			</div>
+		</div>
+		<!-- contents start -->
+		<div id="upload" class="col-sm-2">
+			<h4 class="text-center">drag & drop</h4>
+			<% for(var i in files){ %>
+				<% if(pdfPath == files[i]) { %>
+					<div class="fileInfo active" data-filename="<%= files[i] %>">
+				<% } else { %>
+					<div class="fileInfo" data-filename="<%= files[i] %>">
+				<% } %>
+					<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <%= files[i] %>
+				</div>
+			<% } %>
+		</div>
+		<div class="col-sm-6 col-sm-offset-1">
+			<div class="row">
+				<nav>
+					<ul class="pager">
+						<li><a id="prev" href="#">Previous</a></li>
+						<li><a id="next" href="#">Next</a></li>
+					</ul>
+				</nav>
+				<div id="pdfWrapper">
+					<canvas id="pdfViewer"></canvas>					
+				</div>
+
+
+			</div>
+		</div>
+		<!-- contents end -->
+		
+
+
+		<% include footer %>
+	</body>
+
+	<script>
+		fileExists = <%- fileExists %>
+		pdfPath = "<%- pdfPath %>";
+		roomURL = "<%- roomURL %>";
+		fileHistory = "<%- files %>".split(',');
+		currentPage = <%- page %>;
+	</script>
+
+	<script src="/javascripts/pdf.js"></script>
+  	<script src="/javascripts/pdf.worker.js"></script>
+	<script src="/javascripts/jquery-1.11.2.min.js"></script>
+	<script src="/dist/js/bootstrap.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+
+	<script src="/javascripts/mainScript.js"></script>
+
+</html>

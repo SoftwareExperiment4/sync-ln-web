@@ -1,0 +1,68 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+canvas {
+	width: 100%;
+}
+
+.customBox{
+	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	padding: 3px;
+	margin-bottom: 50px;
+	border-radius: 3px;
+	height: 50%;
+	font-size: 12pt;
+	overflow-y: auto;
+}
+.customBox>a{
+	color: black;
+}
+#pdfWrapper{
+	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	padding: 3px;
+	margin-bottom: 20px;
+}
+
+.row + .row{
+	margin-top:20px;
+}
+
+.vertical-center{
+	margin-top: calc(50%- 100px);
+}
+
+#upload{
+	height: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 68px;
+	border: solid 1px black;
+	padding: 5px;
+	overflow: auto;
+}
+
+.fileInfo, .roomInfo{
+	cursor: pointer;
+	padding: 3px;
+	border-radius: 3px;
+}
+.fileInfo.active{
+	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+.fileInfo:hover, .roomInfo:hover{
+	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
