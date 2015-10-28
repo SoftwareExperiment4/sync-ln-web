@@ -1,11 +1,16 @@
 $(document).ready(function(){
 	var pdfFile = null;
+	var drawing = false;
+	var scale = 4;
+	var scaleFactor = 4;
 	
 	var getPdf = function(fileName)
 	{
 		PDFJS.getDocument('/cloud/' + roomURL + "/" + fileName).then(function(file)
 		{
 			pdfFile = file;
+			console.log(file);
+			$("#totalPages").text("/ "+file.numPages);
 			getPage(currentPage);
 		});
 	}
@@ -22,14 +27,26 @@ $(document).ready(function(){
 			currentPage = pageNumber;
 		}
 
-		pdfFile.getPage(pageNumber).then(function(page){
-			var scale = 4;
+		pdfFile.getPage(pageNumber).then(function(page)
+		{
 			var viewport = page.getViewport(scale);
 
 			var canvas = document.getElementById('pdfViewer');
+			var drawingCanvas = document.getElementById('drawingViewer');
 
 			canvas.height = viewport.height;
 			canvas.width = viewport.width;
+			drawingCanvas.height = canvas.height / scaleFactor;
+			drawingCanvas.width = canvas.width / scaleFactor;
+
+			//$("#pdfWrapper").width(canvas.width / scale).height(canvas.height / scale).removeClass("shadowBox");
+			$("#pdfWrapper").animate({
+				width: canvas.width / scaleFactor,
+				height: canvas.height / scaleFactor
+			}).removeClass("shadowBox");
+
+			$("#goto").val(currentPage)
+
 			var context = canvas.getContext('2d');
 
 			var renderContext = {
@@ -40,24 +57,36 @@ $(document).ready(function(){
 			page.render(renderContext);
 		})
 	}
-	var getNextPage = function(){
+	var getNextPage = function()
+	{
 		getPage(++currentPage);
 		socket.emit('pageChange', currentPage);
 	}
-	var previousPage = function(){
+	var previousPage = function()
+	{
 		getPage(--currentPage);
 		socket.emit('pageChange', currentPage);
 	}
 	var init = function(){
-		if(fileExists){
+		if(fileExists)
+		{
 			getPdf(pdfPath);
 			$(".fileInfo").unbind('click').click(fileInfoClick);
+		}
+		else
+		{
+			var tmp = $("#pdfWrapper");
+			tmp.animate
+			({
+				height: tmp.width() * 9 / 16
+			})
 		}
 
 		var elem = document.getElementById('upload');
 		elem.ondragover = function () { $(this).addClass('hover'); return false; };
 		elem.ondragend = function () { $(this).removeClass('hover'); return false; };
-		elem.ondrop = function (event) {
+		elem.ondrop = function (event) 
+		{
 			event.preventDefault && event.preventDefault();
 			$(this).removeClass('hover');
 
@@ -93,7 +122,8 @@ $(document).ready(function(){
 		};
 	}
 
-	var transferFile = function(file){
+	var transferFile = function(file)
+	{
 		var formData = new FormData();
 		var progress = $("#fileProgress>div");
 		formData.append('file', file);
@@ -104,12 +134,16 @@ $(document).ready(function(){
 		xhr.open('POST', '/upload/' + roomURL, true);
 		
 		xhr.onload = function () {
-			if (xhr.status === 200) {
+			if (xhr.status === 200)
+			{
 				var response = JSON.parse(xhr.response);
-				if(response == "level"){
+				if(response == "level")
+				{
 					alert("Authentication failed");
 					$("#fileProgress").parent().remove();
-				}else if(response == "success"){
+				}
+				else if(response == "success")
+				{
 					$(".fileInfo").removeClass("active")
 					
 					pdfPath = file.name;
@@ -123,12 +157,16 @@ $(document).ready(function(){
 				}
 
 				console.log('all done: ' + xhr.status);
-			} else {
+			} 
+			else
+			{
 				console.log('Something went terribly wrong...');
 			}
 		};
-		xhr.upload.onprogress = function (event) {
-			if (event.lengthComputable) {
+		xhr.upload.onprogress = function (event) 
+		{
+			if (event.lengthComputable)
+			{
 				var complete = (event.loaded / event.total * 100 | 0);
 
 				console.log(complete);
@@ -141,7 +179,8 @@ $(document).ready(function(){
 		xhr.send(formData);
 	}
 
-	var fileInfoClick = function(e){
+	var fileInfoClick = function(e)
+	{
 		var filename = $(this).data('filename');
 		
 		if(filename && pdfPath != filename){
@@ -156,12 +195,72 @@ $(document).ready(function(){
 	}
 	
 
-	$("#prev").click(function(){
+	$("#prev").click(function()
+	{
 		previousPage();
 	})
 
-	$("#next").click(function(){
+	$("#next").click(function()
+	{
 		getNextPage();
+	})
+
+	$("#plus").click(function()
+	{
+		scaleFactor -= 0.5;
+		getPage(currentPage);
+	})
+
+	$("#minus").click(function()
+	{
+		scaleFactor += 0.5;
+		getPage(currentPage);
+	})
+
+	$("#goto").change(function()
+	{
+
+		var val = $(this).val() -0;
+		if(val <= pdfFile.numPages && val > 0)
+		{
+			currentPage = val;
+			getPage(currentPage);
+
+			socket.emit('pageChange', currentPage);
+		}
+
+	})
+
+
+	var drawingCtx = document.getElementById("drawingViewer").getContext("2d");
+	var counter = 0, bfX, bfY, drawingFrequency = 3;
+	$("#drawingViewer").mousedown(function(){
+		drawing = true;
+	})
+	
+	$("#drawingViewer").mousemove(function(e)
+	{
+		if(drawing & (counter++) % drawingFrequency == 0)
+		{
+			drawingCtx.beginPath();
+			drawingCtx.lineWidth=5;
+			drawingCtx.lineCap = 'round'
+			drawingCtx.moveTo(bfX, bfY);
+			drawingCtx.lineTo(e.offsetX, e.offsetY);
+			drawingCtx.stroke();
+
+
+			bfX = e.offsetX;
+			bfY = e.offsetY;
+		}
+		
+	})
+
+	$("#drawingViewer").mouseup(function()
+	{
+		drawing = false;
+		bfX = undefined;
+		bfY = undefined;
 	})
 		
 	
@@ -169,15 +268,18 @@ $(document).ready(function(){
 	//for socket control
 	{
 		var socket = io.connect('http://115.145.179.34:3000/');
-		socket.on('checkRoom', function () {
+		socket.on('checkRoom', function () 
+		{
 			socket.emit('checkRoom', roomURL);
 		});
-		socket.on('pageChange', function (page){
+		socket.on('pageChange', function (page)
+		{
 			currentPage = page;
 			getPage(currentPage);
 			console.log('sibong');
 		})
-		socket.on('pdfAppend', function(fileName){
+		socket.on('pdfAppend', function(fileName)
+		{
 			pdfPath = fileName;
 			currentPage = 1;
 			getPdf(pdfPath);
@@ -191,7 +293,8 @@ $(document).ready(function(){
 			$(".fileInfo").unbind('click').click(fileInfoClick).removeClass("active");
 			$(".fileInfo[data-filename='"+pdfPath+"'").addClass("active");
 		});
-		socket.on('pdfChange', function(filename){
+		socket.on('pdfChange', function(filename)
+		{
 			pdfPath = filename;
 			currentPage = 1;
 			

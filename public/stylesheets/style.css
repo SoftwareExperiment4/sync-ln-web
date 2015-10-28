@@ -26,11 +26,17 @@ canvas {
 	color: black;
 }
 #pdfWrapper{
+	position:relative;
+	border: 1px solid;
+	margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+.shadowBox{
 	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
 	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
 	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	padding: 3px;
-	margin-bottom: 20px;
+	padding: 3px;	
 }
 
 .row + .row{
@@ -40,7 +46,14 @@ canvas {
 .vertical-center{
 	margin-top: calc(50%- 100px);
 }
-
+#goto{
+	width: 50px;
+	display: inherit;
+	text-align: center;
+}
+#totalPages{
+	display: inherit;
+}
 #upload{
 	height: 50%;
 	margin-left: auto;
@@ -65,4 +78,12 @@ canvas {
 	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
 	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
 	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+
+.pager{
+	text-align: left;
+}
+
+#drawingViewer{
+	cursor: crosshair;
 }

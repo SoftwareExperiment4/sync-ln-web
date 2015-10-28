@@ -35,14 +35,17 @@
 				<nav>
 					<ul class="pager">
 						<li><a id="prev" href="#">Previous</a></li>
+						<li><input id="goto" class="form-control" type="text"></input></li>
+						<li><p id="totalPages">/</p></li>
 						<li><a id="next" href="#">Next</a></li>
+						<li><a id="plus" href="#">+</a></li>
+						<li><a id="minus" href="#">-</a></li>
 					</ul>
 				</nav>
-				<div id="pdfWrapper">
-					<canvas id="pdfViewer"></canvas>					
+				<div id="pdfWrapper" class="shadowBox">
+					<canvas id="pdfViewer" style="position:absolute;z-index:1"></canvas>
+					<canvas id="drawingViewer" style="position:absolute;z-index:2"></canvas>
 				</div>
-
-
 			</div>
 		</div>
 		<!-- contents end -->

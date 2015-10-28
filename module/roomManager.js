@@ -49,9 +49,9 @@ roomManager.prototype.setPage = function(roomURL, page){
 }
 
 var checkRoomState = function(){
-	for(var u in this.rooms){
-		this.rooms[u].expireTime -= 60 * 1000; // 1 minute
-		if(this.rooms[u].expireTime <= 0){
+	for(var u in global.roomManager.rooms){
+		global.roomManager.rooms[u].expireTime -= 60 * 1000; // 1 minute
+		if(global.roomManager.rooms[u].expireTime <= 0){
 			deleteRoom(u);
 		}
 	}
@@ -71,8 +71,8 @@ var deleteRoom = function(roomURL){
 		fs.rmdirSync(path);
 	}
 
-	this.roomList.splice(this.rooms[roomURL].index, 1);
-	delete this.rooms[roomURL];
+	global.roomManager.roomList.splice(global.roomManager.rooms[roomURL].index, 1);
+	delete global.roomManager.rooms[roomURL];
 }
 
 setInterval(checkRoomState, 60 * 1000);
