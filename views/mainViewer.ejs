@@ -16,36 +16,38 @@
 					</button>
 				</a>
 			</div>
+			<div class="col-sm-offset-1 col-sm-6"">
+				<nav>
+                                        <ul class="pager">
+                                                <li><a id="prev" href="#">Previous</a></li>
+                                                <li><input id="goto" class="form-control" type="text"></input></li>
+                                                <li><p id="totalPages">/</p></li>
+                                                <li><a id="next" href="#">Next</a></li>
+                                                <li><a id="plus" href="#">+</a></li>
+                                                <li><a id="minus" href="#">-</a></li>
+                                        </ul>
+                                </nav>
+			</div>
 		</div>
 		<!-- contents start -->
-		<div id="upload" class="col-sm-2">
-			<h4 class="text-center">drag & drop</h4>
-			<% for(var i in files){ %>
-				<% if(pdfPath == files[i]) { %>
-					<div class="fileInfo active" data-filename="<%= files[i] %>">
-				<% } else { %>
-					<div class="fileInfo" data-filename="<%= files[i] %>">
+		<div class="row">
+			<div id="upload" class="col-sm-2">
+				<h4 class="text-center">drag & drop</h4>
+				<% for(var i in files){ %>
+					<% if(pdfPath == files[i]) { %>
+						<div class="fileInfo active" data-filename="<%= files[i] %>">
+					<% } else { %>
+						<div class="fileInfo" data-filename="<%= files[i] %>">
+					<% } %>
+						<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <%= files[i] %>
+					</div>
 				<% } %>
-					<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <%= files[i] %>
-				</div>
-			<% } %>
-		</div>
-		<div class="col-sm-6 col-sm-offset-1">
-			<div class="row">
-				<nav>
-					<ul class="pager">
-						<li><a id="prev" href="#">Previous</a></li>
-						<li><input id="goto" class="form-control" type="text"></input></li>
-						<li><p id="totalPages">/</p></li>
-						<li><a id="next" href="#">Next</a></li>
-						<li><a id="plus" href="#">+</a></li>
-						<li><a id="minus" href="#">-</a></li>
-					</ul>
-				</nav>
+			</div>
+			<div class="col-sm-6 col-sm-offset-1">
 				<div id="pdfWrapper" class="shadowBox">
 					<canvas id="pdfViewer" style="position:absolute;z-index:1"></canvas>
 					<canvas id="drawingViewer" style="position:absolute;z-index:2"></canvas>
-				</div>
+					</div>
 			</div>
 		</div>
 		<!-- contents end -->
