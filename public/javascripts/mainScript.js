@@ -231,11 +231,26 @@ $(document).ready(function(){
 
 	})
 
-
 	var drawingCtx = document.getElementById("drawingViewer").getContext("2d");
-	var counter = 0, bfX, bfY, drawingFrequency = 3;
+	var counter = 0, bfX, bfY, drawingFrequency = 3, color = "black", linesize = 5;
+	var tmpcolor;
+
 	$("#drawingViewer").mousedown(function(){
 		drawing = true;
+	})
+	
+	$(".colorPalette").click(function(e){
+		color = $(this).attr('data-color');
+		$(".color-selected").removeClass("color-selected");
+        $(this).addClass('color-selected');
+        e.stopPropagation();
+	})
+
+	$(".toolPicker").click(function(e){
+		linesize = $(this).attr('data-size');
+		$(".tool-selected").removeClass("tool-selected");
+        $(this).addClass('tool-selected');
+        e.stopPropagation();
 	})
 	
 	$("#drawingViewer").mousemove(function(e)
@@ -243,12 +258,12 @@ $(document).ready(function(){
 		if(drawing & (counter++) % drawingFrequency == 0)
 		{
 			drawingCtx.beginPath();
-			drawingCtx.lineWidth=5;
-			drawingCtx.lineCap = 'round'
+			drawingCtx.lineWidth = linesize;
+			drawingCtx.strokeStyle = color;
+			drawingCtx.lineCap = "round";
 			drawingCtx.moveTo(bfX, bfY);
 			drawingCtx.lineTo(e.offsetX, e.offsetY);
 			drawingCtx.stroke();
-
 
 			bfX = e.offsetX;
 			bfY = e.offsetY;

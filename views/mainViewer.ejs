@@ -3,32 +3,77 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/stylesheets/style.css">
+
+		<script>
+			fileExists = <%- fileExists %>
+			pdfPath = "<%- pdfPath %>";
+			roomURL = "<%- roomURL %>";
+			fileHistory = "<%- files %>".split(',');
+			currentPage = <%- page %>;
+		</script>
+
+		<script src="/javascripts/pdf.js"></script>
+	  	<script src="/javascripts/pdf.worker.js"></script>
+		<script src="/javascripts/jquery-1.11.2.min.js"></script>
+		<script src="/dist/js/bootstrap.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/javascripts/mainScript.js"></script>
 	</head>
 	<body>
 		<% include header %>
-		
 
 		<div class="row">
-			<div class="col-sm-2">
+			<div class="col-sm-2" style="display: inline-block;vertical-align: middle;">
 				<a href="/">
 					<button type="button" class="btn btn-default btn-lg">
-						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 					</button>
 				</a>
 			</div>
-			<div class="col-sm-offset-1 col-sm-6"">
+			<div class="col-sm-offset-1 col-sm-6">
 				<nav>
-                                        <ul class="pager">
-                                                <li><a id="prev" href="#">Previous</a></li>
-                                                <li><input id="goto" class="form-control" type="text"></input></li>
-                                                <li><p id="totalPages">/</p></li>
-                                                <li><a id="next" href="#">Next</a></li>
-                                                <li><a id="plus" href="#">+</a></li>
-                                                <li><a id="minus" href="#">-</a></li>
-                                        </ul>
-                                </nav>
+                    <ul class="pager">
+                        <li><a id="prev" href="#">Previous</a></li>
+                        <li><input id="goto" class="form-control" type="text"></input></li>
+                        <li><p id="totalPages">/</p></li>
+                        <li><a id="next" href="#">Next</a></li>
+                        <li><a id="plus" href="#">+</a></li>
+                        <li><a id="minus" href="#">-</a></li>
+                    </ul>
+            	</nav>
 			</div>
 		</div>
+
+		<!-- Color palette and tool picker -->
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				<!-- Basic colors -->
+	            <a href="#" class="colorPalette" data-color="#000000" title="Black"><img src="/images/black_icon.png" alt="Black"/></a>
+	            <a href="#" class="colorPalette" data-color="#ff0000" title="Red"><img src="/images/red_icon.png" alt="Red"/></a>
+				<a href="#" class="colorPalette" data-color="#00ff00" title="Green"><img src="/images/green_icon.png" alt="Green"/></a>
+				<a href="#" class="colorPalette" data-color="#0000ff" title="Blue"><img src="/images/blue_icon.png" alt="Blue"/></a>
+				<a href="#" class="colorPalette" data-color="#ffff00" title="Yellow"><img src="/images/yellow_icon.png" alt="Yellow"/></a>
+				<a href="#" class="colorPalette" data-color="#00ffff" title="Cyan"><img src="/images/cyan_icon.png" alt="Cyan"/></a>
+				<!-- Advanced colors -->
+				<a href="#" class="colorPalette" data-color="#c0392b" title="Pomegrante"><img src="/images/pomegrante_icon.png" alt="Pomegrante"/></a>
+				<a href="#" class="colorPalette" data-color="#e74c3c" title="Alizarin"><img src="/images/alizarin_icon.png" alt="Alizarin"/></a>
+				<a href="#" class="colorPalette" data-color="#f39c12" title="Orange"><img src="/images/orange_icon.png" alt="Orange"/></a>
+				<a href="#" class="colorPalette"class="colorPalette"  data-color="#f1c40f" title="Sun Flower"><img src="/images/sunflower_icon.png" alt="Sun Flower"/></a>
+				<a href="#" class="colorPalette" data-color="#2ecc71" title="Emerald"><img src="/images/emerald_icon.png" alt="Emerald"/></a>
+				<a href="#" class="colorPalette" data-color="#1abc9c" title="Torquoise"><img src="/images/torquoise_icon.png" alt="Torquoise"/></a>
+				<a href="#" class="colorPalette" data-color="#3498db" title="Peter River"><img src="/images/peterriver_icon.png" alt="Peter River"/></a>
+				<a href="#" class="colorPalette" data-color="#9b59b6" title="Amethyst"><img src="/images/amethyst_icon.png" alt="Amethyst"/></a>
+				<br><br>
+				<!-- Basic tools -->
+				<a href="#" class="toolPicker" data-size="1"><img src="/images/pencil_icon.png" alt="Pencil"/></a>
+				<a href="#" class="toolPicker" data-size="3"><img src="/images/pen_icon.png" alt="Pen"/></a>
+				<a href="#" class="toolPicker" data-size="5"><img src="/images/stick_icon.png" alt="Stick"/></a>
+				<a href="#" class="toolPicker" data-size="9"><img src="/images/smallbrush_icon.png" alt="Small brush"/></a>
+				<a href="#" class="toolPicker" data-size="15"><img src="/images/mediumbrush_icon.png" alt="Medium brush"/></a>
+				<a href="#" class="toolPicker" data-size="30"><img src="/images/bigbrush_icon.png" alt="Big brush"/></a>
+	        </div>
+        </div>
+
 		<!-- contents start -->
 		<div class="row">
 			<div id="upload" class="col-sm-2">
@@ -47,30 +92,11 @@
 				<div id="pdfWrapper" class="shadowBox">
 					<canvas id="pdfViewer" style="position:absolute;z-index:1"></canvas>
 					<canvas id="drawingViewer" style="position:absolute;z-index:2"></canvas>
-					</div>
+				</div>				
 			</div>
 		</div>
 		<!-- contents end -->
-		
-
 
 		<% include footer %>
 	</body>
-
-	<script>
-		fileExists = <%- fileExists %>
-		pdfPath = "<%- pdfPath %>";
-		roomURL = "<%- roomURL %>";
-		fileHistory = "<%- files %>".split(',');
-		currentPage = <%- page %>;
-	</script>
-
-	<script src="/javascripts/pdf.js"></script>
-  	<script src="/javascripts/pdf.worker.js"></script>
-	<script src="/javascripts/jquery-1.11.2.min.js"></script>
-	<script src="/dist/js/bootstrap.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-
-	<script src="/javascripts/mainScript.js"></script>
-
 </html>

@@ -11,6 +11,14 @@ canvas {
 	width: 100%;
 }
 
+nav {
+	color: #434751;
+}
+
+nav ul li a {
+	color: #f56151;
+}
+
 .customBox{
 	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
 	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
@@ -86,4 +94,12 @@ canvas {
 
 #drawingViewer{
 	cursor: crosshair;
+}
+
+.color-selected{
+	opacity: 0.4;
+}
+
+.tool-selected{
+	opacity: 0.4;
 }
