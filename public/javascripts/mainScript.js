@@ -278,7 +278,6 @@ $(document).ready(function(){
 		bfY = undefined;
 	})
 		
-	
 
 	//for socket control
 	{
