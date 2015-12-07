@@ -3,13 +3,14 @@ $(document).ready(function(){
 	var drawing = false;
 	var scale = 4;
 	var scaleFactor = 4;
+	var socket = null;
+	var drawingLogs = [];
 	
 	var getPdf = function(fileName)
 	{
 		PDFJS.getDocument('/cloud/' + roomURL + "/" + fileName).then(function(file)
 		{
 			pdfFile = file;
-			console.log(file);
 			$("#totalPages").text("/ "+file.numPages);
 			getPage(currentPage);
 		});
@@ -55,15 +56,27 @@ $(document).ready(function(){
 			}
 
 			page.render(renderContext);
+			if(drawingLogs[currentPage])
+				drawingCanvas.getContext('2d').drawImage(drawingLogs[currentPage], 0, 0, drawingCanvas.width, drawingCanvas.height);
 		})
+	}
+
+	var storeDrawingCanvas = function(page)
+	{
+		var drawingCanvas = document.getElementById('drawingViewer');
+                var image = new Image();
+                image.src = drawingCanvas.toDataURL();
+		drawingLogs[page] = image;
 	}
 	var getNextPage = function()
 	{
+		storeDrawingCanvas(currentPage);
 		getPage(++currentPage);
 		socket.emit('pageChange', currentPage);
 	}
 	var previousPage = function()
 	{
+		storeDrawingCanvas(currentPage);
 		getPage(--currentPage);
 		socket.emit('pageChange', currentPage);
 	}
@@ -207,14 +220,26 @@ $(document).ready(function(){
 
 	$("#plus").click(function()
 	{
+		var drawingCanvas = document.getElementById('drawingViewer');
+		var image = new Image();
+		image.src = drawingCanvas.toDataURL();
 		scaleFactor -= 0.5;
 		getPage(currentPage);
+		image.onload = function(){
+			drawingCanvas.getContext('2d').drawImage(image, 0, 0, drawingCanvas.width, drawingCanvas.height);
+		}
 	})
 
 	$("#minus").click(function()
 	{
-		scaleFactor += 0.5;
-		getPage(currentPage);
+		var drawingCanvas = document.getElementById('drawingViewer');
+                var image = new Image();
+                image.src = drawingCanvas.toDataURL();
+                scaleFactor += 0.5;
+                getPage(currentPage);
+                image.onload = function(){
+                        drawingCanvas.getContext('2d').drawImage(image, 0, 0, drawingCanvas.width, drawingCanvas.height);
+                }
 	})
 
 	$("#goto").change(function()
@@ -223,6 +248,7 @@ $(document).ready(function(){
 		var val = $(this).val() -0;
 		if(val <= pdfFile.numPages && val > 0)
 		{
+			storeDrawingCanvas(currentPage);
 			currentPage = val;
 			getPage(currentPage);
 
@@ -232,7 +258,7 @@ $(document).ready(function(){
 	})
 
 	var drawingCtx = document.getElementById("drawingViewer").getContext("2d");
-	var counter = 0, bfX, bfY, drawingFrequency = 3, color = "black", linesize = 5;
+	var bfX, bfY, color = "black", linesize = 5;
 	var tmpcolor;
 
 	$("#drawingViewer").mousedown(function(){
@@ -255,7 +281,7 @@ $(document).ready(function(){
 	
 	$("#drawingViewer").mousemove(function(e)
 	{
-		if(drawing & (counter++) % drawingFrequency == 0)
+		if(drawing)
 		{
 			drawingCtx.beginPath();
 			drawingCtx.lineWidth = linesize;
@@ -264,6 +290,20 @@ $(document).ready(function(){
 			drawingCtx.moveTo(bfX, bfY);
 			drawingCtx.lineTo(e.offsetX, e.offsetY);
 			drawingCtx.stroke();
+
+			if(level == 5)
+			{
+				var drawingObj = {};
+				drawingObj.lineWidth = linesize;
+				drawingObj.strokeStyle = color;
+				drawingObj.lineCap = "round";
+				drawingObj.bfX = bfX;
+				drawingObj.bfY = bfY;
+				drawingObj.newX = e.offsetX;
+				drawingObj.newY = e.offsetY;
+
+				socket.emit('drawingInfo', drawingObj);
+			}
 
 			bfX = e.offsetX;
 			bfY = e.offsetY;
@@ -277,20 +317,19 @@ $(document).ready(function(){
 		bfX = undefined;
 		bfY = undefined;
 	})
-		
 
 	//for socket control
 	{
-		var socket = io.connect('http://115.145.179.34:3000/');
+		socket = io.connect('http://115.145.179.34:3000/');
 		socket.on('checkRoom', function () 
 		{
 			socket.emit('checkRoom', roomURL);
 		});
 		socket.on('pageChange', function (page)
 		{
+			storeDrawingCanvas(currentPage);
 			currentPage = page;
 			getPage(currentPage);
-			console.log('sibong');
 		})
 		socket.on('pdfAppend', function(fileName)
 		{
@@ -298,7 +337,6 @@ $(document).ready(function(){
 			currentPage = 1;
 			getPdf(pdfPath);
 			fileHistory.push(fileName);
-			
 
 			var str = '<div class="fileInfo active" data-filename="'+ fileName +'">'
 			str += 		'<span class="glyphicon glyphicon-file" aria-hidden="true"></span>' + fileName ;
@@ -315,8 +353,20 @@ $(document).ready(function(){
 			getPdf(pdfPath);
 			$(".fileInfo").removeClass("active")
 			$(".fileInfo[data-filename='"+pdfPath+"'").addClass("active");
-		})
+		});
 
+		if(level != 5)
+		{
+			socket.on('drawingInfo', function(drawingObj){
+				drawingCtx.beginPath();
+				drawingCtx.lineWidth = drawingObj.lineWidth;
+				drawingCtx.strokeStyle = drawingObj.strokeStyle;
+				drawingCtx.lineCap = drawingObj.lineCap;
+				drawingCtx.moveTo(drawingObj.bfX, drawingObj.bfY);
+				drawingCtx.lineTo(drawingObj.newX, drawingObj.newY);
+				drawingCtx.stroke();
+			})
+		}
 	}
 
 

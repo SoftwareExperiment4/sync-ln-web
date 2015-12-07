@@ -23,7 +23,6 @@ var routeFunctions = function(socket){
 
 	socket.on('pdfAppend', function(fileName){
 		var roomURL = this.rooms[1];
-		console.log(socket.handshake.sessionID)
 		if(!global.roomManager.checkAuth(roomURL, socket.handshake.sessionID)|| !fileName) return;
 		
 		socket.broadcast.to(roomURL).emit('pdfAppend', fileName); //http already updated roomManager info
@@ -35,6 +34,13 @@ var routeFunctions = function(socket){
 		
 		socket.broadcast.to(roomURL).emit('pdfChange', pdfPath);
 		global.roomManager.setPdf(roomURL, pdfPath);
+	});
+
+	socket.on('drawingInfo', function(drawingObj){
+		var roomURL = this.rooms[1];
+		if(!global.roomManager.checkAuth(roomURL, socket.handshake.sessionID) || !drawingObj) return;
+
+		socket.broadcast.to(roomURL).emit('drawingInfo', drawingObj);
 	})
 
 }

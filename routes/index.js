@@ -53,6 +53,7 @@ router.get('/room/:roomURL', function(req, res, next)
 		var room = roomManager.getRoom(roomURL);
 		if(room)
 		{
+			room.level = sess.level;
 			res.render('mainViewer', room);
 		}
 		else
