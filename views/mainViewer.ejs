@@ -13,12 +13,6 @@
 			currentPage = <%- page %>;
 		</script>
 
-		<script src="/javascripts/pdf.js"></script>
-	  	<script src="/javascripts/pdf.worker.js"></script>
-		<script src="/javascripts/jquery-1.11.2.min.js"></script>
-		<script src="/dist/js/bootstrap.min.js"></script>
-		<script src="/socket.io/socket.io.js"></script>
-		<script src="/javascripts/mainScript.js"></script>
 	</head>
 	<body>
 		<% include header %>
@@ -40,7 +34,13 @@
                         <li><a id="next" href="#">Next</a></li>
                         <li><a id="plus" href="#">+</a></li>
                         <li><a id="minus" href="#">-</a></li>
+                        <li><a id="download" href="#"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></li>
                     </ul>
+                    <div id="progress" class="progress">
+						<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+							0%
+						</div>
+					</div>
             	</nav>
 			</div>
 		</div>
@@ -100,4 +100,14 @@
 
 		<% include footer %>
 	</body>
+
+	<canvas id="tmpCanvas" style="display:none"></canvas>
+
+	<script src="/javascripts/pdf.js"></script>
+  	<script src="/javascripts/pdf.worker.js"></script>
+	<script src="/javascripts/jquery-1.11.2.min.js"></script>
+	<script src="/dist/js/bootstrap.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/javascripts/mainScript.js"></script>
+	<script src="/javascripts/jspdf.min.js"></script>
 </html>

@@ -1,11 +1,11 @@
 $(document).ready(function(){
 	var pdfFile = null;
 	var drawing = false;
-	var scale = 4;
-	var scaleFactor = 4;
+	var scale = 3;
+	var scaleFactor = 3;
 	var socket = null;
 	var drawingLogs = [];
-	
+	var progress = $("#progress").hide();
 	var getPdf = function(fileName)
 	{
 		PDFJS.getDocument('/cloud/' + roomURL + "/" + fileName).then(function(file)
@@ -39,6 +39,9 @@ $(document).ready(function(){
 			canvas.width = viewport.width;
 			drawingCanvas.height = canvas.height / scaleFactor;
 			drawingCanvas.width = canvas.width / scaleFactor;
+
+			pdfFile.width = viewport.width / scale;
+			pdfFile.height = viewport.height / scale;
 
 			//$("#pdfWrapper").width(canvas.width / scale).height(canvas.height / scale).removeClass("shadowBox");
 			$("#pdfWrapper").animate({
@@ -233,13 +236,13 @@ $(document).ready(function(){
 	$("#minus").click(function()
 	{
 		var drawingCanvas = document.getElementById('drawingViewer');
-                var image = new Image();
-                image.src = drawingCanvas.toDataURL();
-                scaleFactor += 0.5;
-                getPage(currentPage);
-                image.onload = function(){
-                        drawingCanvas.getContext('2d').drawImage(image, 0, 0, drawingCanvas.width, drawingCanvas.height);
-                }
+        var image = new Image();
+        image.src = drawingCanvas.toDataURL();
+        scaleFactor += 0.5;
+        getPage(currentPage);
+        image.onload = function(){
+                drawingCanvas.getContext('2d').drawImage(image, 0, 0, drawingCanvas.width, drawingCanvas.height);
+        }
 	})
 
 	$("#goto").change(function()
@@ -369,8 +372,72 @@ $(document).ready(function(){
 		}
 	}
 
+	var generatePage = function(doc, canvas, context, currentPage, totalPage, callback)
+	{
+		pdfFile.getPage(currentPage).then(function(page)
+		{
+			var viewport = page.getViewport(2);
 
+			canvas.height = viewport.height;
+			canvas.width = viewport.width;
 
+			var renderContext = {
+				canvasContext: context,
+				viewport: viewport
+			}
+			var percent = parseInt(currentPage / totalPage * 100) + "%";
+			progress.find("div").width(percent).text(percent).attr('aria-valuenow', parseInt(currentPage / totalPage * 100));
+
+			page.render(renderContext).then(function(){
+
+				var width = canvas.width / 2;
+				var height = canvas.height / 2;
+				
+				doc.addImage(canvas.toDataURL("image/jpeg"), 'JPEG', 0, 0, width, height);
+				if(drawingLogs[currentPage] && drawingLogs[currentPage].src)
+					doc.addImage(drawingLogs[currentPage], 'JPEG', 0, 0, width, height);
+
+				if(currentPage < totalPage){
+					doc.addPage();
+					generatePage(doc, canvas, context, ++currentPage, totalPage, callback);
+				}
+				else
+					callback();
+
+			});
+			
+		})
+	}
+	var generatePdf = function()
+	{
+
+		progress.show();
+		var doc = null;
+		if(pdfFile.width > pdfFile.height)
+			doc = new jsPDF('l', 'px', [pdfFile.width, pdfFile.height]);
+		else
+			doc = new jsPDF('p', 'px', [pdfFile.width, pdfFile.height]);
+		var canvas = document.getElementById('tmpCanvas');
+		var context = canvas.getContext('2d');
+
+		storeDrawingCanvas(currentPage);
+
+		// get pages
+		generatePage(doc, canvas, context, 1, pdfFile.numPages, function(){
+			console.log("finished");
+			doc.save('sync-ln-web.pdf');
+
+			delete doc;
+			doc = null;
+			progress.hide();
+		});
+		
+		
+	}
+
+	$("#download").click(function(){
+		generatePdf();
+	})
 
 
 	init();
