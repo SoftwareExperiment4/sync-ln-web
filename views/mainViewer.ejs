@@ -3,7 +3,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/stylesheets/style.css">
-
+		<title>Sync ln Web</title>
 		<script>
 			fileExists = <%- fileExists %>
 			pdfPath = "<%- pdfPath %>";
@@ -48,31 +48,34 @@
 		<!-- Color palette and tool picker -->
 		<div class="row">
 			<div class="col-sm-offset-3 col-sm-6">
+				<div class="colorbox" style="margin-bottom:5px;">
 				<!-- Basic colors -->
-	            <a href="#" class="colorPalette" data-color="#000000" title="Black"><img src="/images/black_icon.png" alt="Black"/></a>
-	            <a href="#" class="colorPalette" data-color="#ff0000" title="Red"><img src="/images/red_icon.png" alt="Red"/></a>
-				<a href="#" class="colorPalette" data-color="#00ff00" title="Green"><img src="/images/green_icon.png" alt="Green"/></a>
-				<a href="#" class="colorPalette" data-color="#0000ff" title="Blue"><img src="/images/blue_icon.png" alt="Blue"/></a>
-				<a href="#" class="colorPalette" data-color="#ffff00" title="Yellow"><img src="/images/yellow_icon.png" alt="Yellow"/></a>
-				<a href="#" class="colorPalette" data-color="#00ffff" title="Cyan"><img src="/images/cyan_icon.png" alt="Cyan"/></a>
-				<!-- Advanced colors -->
-				<a href="#" class="colorPalette" data-color="#c0392b" title="Pomegrante"><img src="/images/pomegrante_icon.png" alt="Pomegrante"/></a>
-				<a href="#" class="colorPalette" data-color="#e74c3c" title="Alizarin"><img src="/images/alizarin_icon.png" alt="Alizarin"/></a>
-				<a href="#" class="colorPalette" data-color="#f39c12" title="Orange"><img src="/images/orange_icon.png" alt="Orange"/></a>
-				<a href="#" class="colorPalette"class="colorPalette"  data-color="#f1c40f" title="Sun Flower"><img src="/images/sunflower_icon.png" alt="Sun Flower"/></a>
-				<a href="#" class="colorPalette" data-color="#2ecc71" title="Emerald"><img src="/images/emerald_icon.png" alt="Emerald"/></a>
-				<a href="#" class="colorPalette" data-color="#1abc9c" title="Torquoise"><img src="/images/torquoise_icon.png" alt="Torquoise"/></a>
-				<a href="#" class="colorPalette" data-color="#3498db" title="Peter River"><img src="/images/peterriver_icon.png" alt="Peter River"/></a>
-				<a href="#" class="colorPalette" data-color="#9b59b6" title="Amethyst"><img src="/images/amethyst_icon.png" alt="Amethyst"/></a>
-				<br><br>
-				<!-- Basic tools -->
-				<a href="#" class="toolPicker" data-size="1"><img src="/images/pencil_icon.png" alt="Pencil"/></a>
-				<a href="#" class="toolPicker" data-size="3"><img src="/images/pen_icon.png" alt="Pen"/></a>
-				<a href="#" class="toolPicker" data-size="5"><img src="/images/stick_icon.png" alt="Stick"/></a>
-				<a href="#" class="toolPicker" data-size="9"><img src="/images/smallbrush_icon.png" alt="Small brush"/></a>
-				<a href="#" class="toolPicker" data-size="15"><img src="/images/mediumbrush_icon.png" alt="Medium brush"/></a>
-				<a href="#" class="toolPicker" data-size="30"><img src="/images/bigbrush_icon.png" alt="Big brush"/></a>
-				<a href="#" class="toolPicker" data-size="0"><img src="/images/eraser_icon.png" alt="Eraser"/></a>
+		            <a href="#" class="colorPalette" data-color="#000000" title="Black"><img src="/images/black_icon.png" alt="Black"/></a>
+		            <a href="#" class="colorPalette" data-color="#ff0000" title="Red"><img src="/images/red_icon.png" alt="Red"/></a>
+					<a href="#" class="colorPalette" data-color="#00ff00" title="Green"><img src="/images/green_icon.png" alt="Green"/></a>
+					<a href="#" class="colorPalette" data-color="#0000ff" title="Blue"><img src="/images/blue_icon.png" alt="Blue"/></a>
+					<a href="#" class="colorPalette" data-color="#ffff00" title="Yellow"><img src="/images/yellow_icon.png" alt="Yellow"/></a>
+					<a href="#" class="colorPalette" data-color="#00ffff" title="Cyan"><img src="/images/cyan_icon.png" alt="Cyan"/></a>
+					<!-- Advanced colors -->
+					<a href="#" class="colorPalette" data-color="#c0392b" title="Pomegrante"><img src="/images/pomegrante_icon.png" alt="Pomegrante"/></a>
+					<a href="#" class="colorPalette" data-color="#e74c3c" title="Alizarin"><img src="/images/alizarin_icon.png" alt="Alizarin"/></a>
+					<a href="#" class="colorPalette" data-color="#f39c12" title="Orange"><img src="/images/orange_icon.png" alt="Orange"/></a>
+					<a href="#" class="colorPalette"class="colorPalette"  data-color="#f1c40f" title="Sun Flower"><img src="/images/sunflower_icon.png" alt="Sun Flower"/></a>
+					<a href="#" class="colorPalette" data-color="#2ecc71" title="Emerald"><img src="/images/emerald_icon.png" alt="Emerald"/></a>
+					<a href="#" class="colorPalette" data-color="#1abc9c" title="Torquoise"><img src="/images/torquoise_icon.png" alt="Torquoise"/></a>
+					<a href="#" class="colorPalette" data-color="#3498db" title="Peter River"><img src="/images/peterriver_icon.png" alt="Peter River"/></a>
+					<a href="#" class="colorPalette" data-color="#9b59b6" title="Amethyst"><img src="/images/amethyst_icon.png" alt="Amethyst"/></a>
+				</div>
+				<div class="toolbox">
+					<!-- Basic tools -->
+					<a href="#" class="toolPicker" data-size="1"><img src="/images/pencil_icon.png" alt="Pencil"/></a>
+					<a href="#" class="toolPicker" data-size="3"><img src="/images/pen_icon.png" alt="Pen"/></a>
+					<a href="#" class="toolPicker" data-size="5"><img src="/images/stick_icon.png" alt="Stick"/></a>
+					<a href="#" class="toolPicker" data-size="9"><img src="/images/smallbrush_icon.png" alt="Small brush"/></a>
+					<a href="#" class="toolPicker" data-size="15"><img src="/images/mediumbrush_icon.png" alt="Medium brush"/></a>
+					<a href="#" class="toolPicker" data-size="30"><img src="/images/bigbrush_icon.png" alt="Big brush"/></a>
+					<a href="#" class="toolPicker" data-size="0"><img src="/images/eraser_icon.png" alt="Eraser"/></a>
+				</div>
 	        </div>
         </div>
 
