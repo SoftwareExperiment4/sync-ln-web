@@ -261,7 +261,7 @@ $(document).ready(function(){
 	})
 
 	var drawingCtx = document.getElementById("drawingViewer").getContext("2d");
-	var bfX, bfY, color = "black", linesize = 5;
+	var bfX, bfY, color = "black", linesize = 5, mode=0;
 	var tmpcolor;
 
 	$("#drawingViewer").mousedown(function(){
@@ -277,6 +277,12 @@ $(document).ready(function(){
 
 	$(".toolPicker").click(function(e){
 		linesize = $(this).attr('data-size');
+		if(linesize == 0)
+		{
+			linesize = 9;
+			mode = 1;
+		}
+		else	mode = 0;
 		$(".tool-selected").removeClass("tool-selected");
         $(this).addClass('tool-selected');
         e.stopPropagation();
@@ -286,13 +292,24 @@ $(document).ready(function(){
 	{
 		if(drawing)
 		{
-			drawingCtx.beginPath();
-			drawingCtx.lineWidth = linesize;
-			drawingCtx.strokeStyle = color;
-			drawingCtx.lineCap = "round";
-			drawingCtx.moveTo(bfX, bfY);
-			drawingCtx.lineTo(e.offsetX, e.offsetY);
-			drawingCtx.stroke();
+			if(mode == 0)
+			{
+				drawingCtx.beginPath();
+				drawingCtx.globalCompositeOperation = "source-over";
+				drawingCtx.lineWidth = linesize;
+				drawingCtx.strokeStyle = color;
+				drawingCtx.lineCap = "round";
+				drawingCtx.moveTo(bfX, bfY);
+				drawingCtx.lineTo(e.offsetX, e.offsetY);
+				drawingCtx.stroke();
+			}
+			else
+			{
+				drawingCtx.beginPath();
+				drawingCtx.globalCompositeOperation = "destination-out";
+				drawingCtx.arc(bfX, bfY, 8, 0, Math.PI*2, false);
+      			drawingCtx.fill();
+			}
 
 			if(level == 5)
 			{
