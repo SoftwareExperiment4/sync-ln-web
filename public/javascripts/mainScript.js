@@ -83,6 +83,19 @@ $(document).ready(function(){
 		getPage(--currentPage);
 		socket.emit('pageChange', currentPage);
 	}
+
+	var scaleTo = function(newScaleFactor)
+	{
+		var drawingCanvas = document.getElementById('drawingViewer');
+		var image = new Image();
+		image.src = drawingCanvas.toDataURL();
+		scaleFactor = newScaleFactor;
+		getPage(currentPage);
+		image.onload = function(){
+			drawingCanvas.getContext('2d').drawImage(image, 0, 0, drawingCanvas.width, drawingCanvas.height);
+		}
+	}
+
 	var init = function(){
 		if(fileExists)
 		{
@@ -220,29 +233,15 @@ $(document).ready(function(){
 	{
 		getNextPage();
 	})
-
+	
 	$("#plus").click(function()
 	{
-		var drawingCanvas = document.getElementById('drawingViewer');
-		var image = new Image();
-		image.src = drawingCanvas.toDataURL();
-		scaleFactor -= 0.5;
-		getPage(currentPage);
-		image.onload = function(){
-			drawingCanvas.getContext('2d').drawImage(image, 0, 0, drawingCanvas.width, drawingCanvas.height);
-		}
+		scaleTo(scaleFactor - 0.5);
 	})
 
 	$("#minus").click(function()
 	{
-		var drawingCanvas = document.getElementById('drawingViewer');
-        var image = new Image();
-        image.src = drawingCanvas.toDataURL();
-        scaleFactor += 0.5;
-        getPage(currentPage);
-        image.onload = function(){
-                drawingCanvas.getContext('2d').drawImage(image, 0, 0, drawingCanvas.width, drawingCanvas.height);
-        }
+		scaleTo(scaleFactor + 0.5);
 	})
 
 	$("#goto").change(function()
@@ -296,14 +295,15 @@ $(document).ready(function(){
 
 			if(level == 5)
 			{
+				var scaleRatio = scaleFactor / scale;
 				var drawingObj = {};
 				drawingObj.lineWidth = linesize;
 				drawingObj.strokeStyle = color;
 				drawingObj.lineCap = "round";
-				drawingObj.bfX = bfX;
-				drawingObj.bfY = bfY;
-				drawingObj.newX = e.offsetX;
-				drawingObj.newY = e.offsetY;
+				drawingObj.bfX = bfX ? bfX * scaleRatio : bfX;
+				drawingObj.bfY = bfY ? bfY * scaleRatio : bfY;
+				drawingObj.newX = e.offsetX * scaleRatio;
+				drawingObj.newY = e.offsetY * scaleRatio;
 
 				socket.emit('drawingInfo', drawingObj);
 			}
@@ -334,6 +334,7 @@ $(document).ready(function(){
 			currentPage = page;
 			getPage(currentPage);
 		})
+
 		socket.on('pdfAppend', function(fileName)
 		{
 			pdfPath = fileName;
@@ -361,12 +362,13 @@ $(document).ready(function(){
 		if(level != 5)
 		{
 			socket.on('drawingInfo', function(drawingObj){
+				var scaleRatio = scale / scaleFactor;
 				drawingCtx.beginPath();
 				drawingCtx.lineWidth = drawingObj.lineWidth;
 				drawingCtx.strokeStyle = drawingObj.strokeStyle;
 				drawingCtx.lineCap = drawingObj.lineCap;
-				drawingCtx.moveTo(drawingObj.bfX, drawingObj.bfY);
-				drawingCtx.lineTo(drawingObj.newX, drawingObj.newY);
+				drawingCtx.moveTo(drawingObj.bfX * scaleRatio, drawingObj.bfY * scaleRatio);
+				drawingCtx.lineTo(drawingObj.newX * scaleRatio, drawingObj.newY * scaleRatio);
 				drawingCtx.stroke();
 			})
 		}
