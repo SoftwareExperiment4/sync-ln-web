@@ -1,6 +1,8 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	padding-top: 25px;
+	padding-right: 50px;
+	padding-left: 50px;
+	padding-bottom: 25px;
 }
 
 a {
@@ -20,9 +22,9 @@ nav ul li a {
 }
 
 .customBox{
-	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	-webkit-box-shadow: inset 0px 0px 4px 0px rgba(180,180,180,0.95);
+	-moz-box-shadow: inset 0px 0px 4px 0px rgba(180,180,180,0.95);
+	box-shadow: inset 0px 0px 4px 0px rgba(180,180,180,0.95);
 	padding: 3px;
 	margin-bottom: 50px;
 	border-radius: 3px;
@@ -35,15 +37,15 @@ nav ul li a {
 }
 #pdfWrapper{
 	position:relative;
-	border: 1px solid;
+	border: 1px solid rgb(180,180,180);
 	margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
 }
 .shadowBox{
-	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	-webkit-box-shadow: inset 0px 0px 4px 0px rgba(180,180,180,0.95);
+	-moz-box-shadow: inset 0px 0px 4px 0px rgba(180,180,180,0.95);
+	box-shadow: inset 0px 0px 4px 0px rgba(180,180,180,0.95);
 	padding: 3px;	
 }
 
@@ -67,7 +69,7 @@ nav ul li a {
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 68px;
-	border: solid 1px black;
+	border: 1px solid rgb(180,180,180);
 	padding: 5px;
 	overflow: auto;
 }
@@ -78,14 +80,10 @@ nav ul li a {
 	border-radius: 3px;
 }
 .fileInfo.active{
-	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+	background-color: rgb(230,230,230);
 }
-.fileInfo:hover, .roomInfo:hover{
-	-webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
-	box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+.fileInfo:hover, .roomInfo:hover{	
+	background-color: rgba(245,97,81,0.5);
 }
 
 .pager{

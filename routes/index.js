@@ -58,7 +58,7 @@ router.get('/room/:roomURL', function(req, res, next)
 		}
 		else
 		{
-			return next(new Error("This URL is not exists....."));
+			return next(new Error("This URL does not exist!"));
 		}
 	}
 	else

@@ -3,6 +3,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/stylesheets/style.css">
+		<title>Sync ln Web</title>
 	</head>
 	<body>
 		<% include header %>
@@ -10,12 +11,13 @@
 		<form method="get" action="/create">
 			<!-- contents start -->
 			<div class="container">
-				<h1><p class="text-center">Room List</p></h1>
+				<center><img src="/images/logo.png" style="max-width:35%;max-height:35%;"/></center>
+				<h4><p class="text-center">Room List</p></h4>
 				<div id="roomList" class="customBox row col-sm-6 col-sm-offset-3">
 					<% for(i in roomList) { %>
 						<a href="/room/<%= roomList[i].roomURL %>" >
 							<div class="roomInfo" data-roomURL="<%= roomList[i].roomURL %>">
-								<span class="glyphicon glyphicon-expand" aria-hidden="true"></span> <%= roomList[i].roomName %> : <small>HASH(<%= roomList[i].roomURL %>)</small>
+								<span class="glyphicon glyphicon glyphicon-log-in" aria-hidden="true" style="margin-right: 4px;"></span> <%= roomList[i].roomName %> : <small>HASH(<%= roomList[i].roomURL %>)</small>
 							</div>
 						</a>
 					<% } %>
@@ -26,9 +28,13 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-8 col-sm-offset-2">
-						<button type="submit" class="btn btn-success btn-lg btn-block ">Create Room</button>
-						<h4><p class="text-left">CREATED ROOM ALIVE DURING JUST ONE HOUR</p></h4>
+					<div class="col-sm-6 col-sm-offset-3">
+						<button type="submit" class="btn btn-danger btn-lg btn-block ">Create Room</button><br>
+						<div class="alert alert-danger" role="alert">
+						  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						  <span class="sr-only">Error:</span>
+						  Created room alive during just one hour
+						 </div>
 
 					</div>
 				</div>
