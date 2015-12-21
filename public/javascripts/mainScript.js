@@ -301,26 +301,39 @@ $(document).ready(function(){
 				drawingCtx.moveTo(bfX, bfY);
 				drawingCtx.lineTo(e.offsetX, e.offsetY);
 				drawingCtx.stroke();
+				drawingCtx.closePath();
 			}
 			else
 			{
 				drawingCtx.beginPath();
 				drawingCtx.globalCompositeOperation = "destination-out";
-				drawingCtx.arc(bfX, bfY, 8, 0, Math.PI*2, false);
+				drawingCtx.arc(bfX, bfY, 10, 0, Math.PI*2, false);
       			drawingCtx.fill();
+      			drawingCtx.closePath();
 			}
 
 			if(level == 5)
 			{
 				var scaleRatio = scaleFactor / scale;
 				var drawingObj = {};
-				drawingObj.lineWidth = linesize;
-				drawingObj.strokeStyle = color;
-				drawingObj.lineCap = "round";
-				drawingObj.bfX = bfX ? bfX * scaleRatio : bfX;
-				drawingObj.bfY = bfY ? bfY * scaleRatio : bfY;
-				drawingObj.newX = e.offsetX * scaleRatio;
-				drawingObj.newY = e.offsetY * scaleRatio;
+
+				drawingObj.mode = mode;
+				if(mode == 0)
+				{
+					drawingObj.lineWidth = linesize;
+					drawingObj.strokeStyle = color;
+					drawingObj.lineCap = "round";
+					drawingObj.bfX = bfX ? bfX * scaleRatio : bfX;
+					drawingObj.bfY = bfY ? bfY * scaleRatio : bfY;
+					drawingObj.newX = e.offsetX * scaleRatio;
+					drawingObj.newY = e.offsetY * scaleRatio;
+				}
+				else
+				{
+					drawingObj.bfX = bfX ? bfX * scaleRatio : bfX;
+					drawingObj.bfY = bfY ? bfY * scaleRatio : bfY;
+				}
+				
 
 				socket.emit('drawingInfo', drawingObj);
 			}
@@ -380,13 +393,27 @@ $(document).ready(function(){
 		{
 			socket.on('drawingInfo', function(drawingObj){
 				var scaleRatio = scale / scaleFactor;
-				drawingCtx.beginPath();
-				drawingCtx.lineWidth = drawingObj.lineWidth;
-				drawingCtx.strokeStyle = drawingObj.strokeStyle;
-				drawingCtx.lineCap = drawingObj.lineCap;
-				drawingCtx.moveTo(drawingObj.bfX * scaleRatio, drawingObj.bfY * scaleRatio);
-				drawingCtx.lineTo(drawingObj.newX * scaleRatio, drawingObj.newY * scaleRatio);
-				drawingCtx.stroke();
+				if(drawingObj.mode == 0)
+				{
+					drawingCtx.beginPath();
+					drawingCtx.globalCompositeOperation = "source-over";
+					drawingCtx.lineWidth = drawingObj.lineWidth;
+					drawingCtx.strokeStyle = drawingObj.strokeStyle;
+					drawingCtx.lineCap = drawingObj.lineCap;
+					drawingCtx.moveTo(drawingObj.bfX * scaleRatio, drawingObj.bfY * scaleRatio);
+					drawingCtx.lineTo(drawingObj.newX * scaleRatio, drawingObj.newY * scaleRatio);
+					drawingCtx.stroke();
+					drawingCtx.closePath();
+				}
+				else
+				{
+					drawingCtx.beginPath();
+					drawingCtx.globalCompositeOperation = "destination-out";
+					drawingCtx.arc(drawingObj.bfX * scaleRatio, drawingObj.bfY * scaleRatio, 10, 0, Math.PI*2, false);
+					drawingCtx.fill();
+					drawingCtx.closePath();
+				}
+				
 			})
 		}
 	}
